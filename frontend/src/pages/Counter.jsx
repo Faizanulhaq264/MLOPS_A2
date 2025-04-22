@@ -2,6 +2,10 @@ import { useEffect, useState, useContext } from "react";
 import axios from "axios";
 import { AuthContext } from "../services/AuthContext";
 
+const COUNTER_URL =
+  import.meta.env.VITE_COUNTER_URL || "http://counter-service.local:4001";
+
+
 export default function Counter() {
   const { user, logout } = useContext(AuthContext);
   const [count, setCount] = useState(0);
@@ -9,7 +13,7 @@ export default function Counter() {
 
   // Axios helper with auth header
   const api = axios.create({
-    baseURL: "http://counter-service.local",
+    baseURL: "COUNTER_URL",
     headers: { Authorization: `Bearer ${user.token}` },
   });
 

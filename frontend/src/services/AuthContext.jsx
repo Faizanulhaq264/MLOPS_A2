@@ -2,6 +2,8 @@ import React, { createContext, useState, useEffect } from "react";
 import axios from "axios";
 
 export const AuthContext = createContext(null);
+const AUTH_URL =
+  import.meta.env.VITE_AUTH_URL || "http://auth-service.local:4000";
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);        // { email, token }
@@ -15,7 +17,7 @@ export const AuthProvider = ({ children }) => {
   }, []);
 
   const login = async (email, password) => {
-    const res = await axios.post("http://auth-service.local/login", {
+    const res = await axios.post("${AUTH_URL}/login", {
       email,
       password,
     });
@@ -25,7 +27,7 @@ export const AuthProvider = ({ children }) => {
   };
 
   const signup = async (email, password) => {
-    await axios.post("http://auth-service.local/signup", { email, password });
+    await axios.post("${AUTH_URL}/signup", { email, password });
   };
 
   const logout = () => {

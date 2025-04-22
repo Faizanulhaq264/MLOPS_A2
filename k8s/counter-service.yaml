@@ -1,0 +1,44 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: counter-service
+  namespace: mlops-a2
+spec:
+  selector:
+    app: counter-service
+  ports:
+    - port: 4001       # ClusterIP port
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: counter-service
+  namespace: mlops-a2
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: counter-service
+  template:
+    metadata:
+      labels:
+        app: counter-service
+    spec:
+      containers:
+        - name: app
+          image: counter-service:1.0
+          ports:
+            - containerPort: 4001
+          env:
+            - name: PORT
+              value: "4001"
+            - name: MONGO_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: env-common
+                  key: MONGO_URL
+            - name: JWT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: jwt-secret
+                  key: JWT_SECRET

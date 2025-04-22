@@ -1,0 +1,44 @@
+
+# 1.  Start Kubernetes + Ingress
+minikube start --driver=docker
+minikube addons enable ingress
+
+# 2.  Build Docker images *inside* Minikube
+minikube -p minikube docker-env --shell bash | source /dev/stdin   # Windows PS: use Invoke‑Expression
+docker build -t auth-service:1.0    ./auth-service
+docker build -t counter-service:1.0 ./counter-service
+docker build -t frontend:1.0        ./frontend
+
+# 3.  Deploy manifests
+kubectl apply -f k8s/namespace.yaml
+kubectl apply -f k8s/mongo.yaml      -n mlops-a2
+kubectl apply -f k8s/secrets-config.yaml -n mlops-a2
+kubectl apply -f k8s/auth-service.yaml   -n mlops-a2
+kubectl apply -f k8s/counter-service.yaml -n mlops-a2
+kubectl apply -f k8s/frontend.yaml       -n mlops-a2
+kubectl apply -f k8s/ingress.yaml        -n mlops-a2
+
+# 4.  Expose Ingress on host port 80 (run in **admin** shell, keep running)
+minikube tunnel
+Locally i have port 8080 running jenkins that is why we are utilizing port 8088
+
+# 5.  Add hostnames to the hosts file
+open as Administrator:  C:\Windows\System32\drivers\etc\hosts
+127.0.0.1  frontend.local auth-service.local counter-service.local
+
+# 6.  Verify pods are ready
+kubectl get pods -n mlops-a2
+kubectl get ingress app-ingress -n mlops-a2
+
+# 7.  Open the app
+http://frontend.local
+
+# 8. View Mongo documents via port‑forward
+kubectl port-forward svc/mongo 27017:27017 -n mlops-a2
+# Then in MongoDB Compass connect to: mongodb://localhost:27017/app
+# Query:
+db.counters.find().pretty()
+
+kubectl exec -it deploy/mongo -n mlops-a2 -- mongosh app --eval '                                                              
+db.counters.find().pretty()
+ '

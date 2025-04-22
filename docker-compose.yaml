@@ -1,0 +1,46 @@
+version: "3.8"
+
+services:
+  mongo:
+    image: mongo:7
+    volumes:
+      - mongo-data:/data/db
+    ports:
+      - "27017:27017"
+
+  auth-service:
+    build:
+      context: ./auth-service
+    environment:
+      - MONGO_URL=mongodb://mongo:27017/app
+      - JWT_SECRET=supersecret123
+    ports:
+      - "4000:4000"
+    depends_on:
+      - mongo
+
+  counter-service:
+    build:
+      context: ./counter-service
+    environment:
+      - MONGO_URL=mongodb://mongo:27017/app
+      - JWT_SECRET=supersecret123
+    ports:
+      - "4001:4001"
+    depends_on:
+      - mongo
+
+  frontend:
+    build:
+      context: ./frontend
+    ports:
+      - "8088:80"
+    depends_on:
+      - auth-service
+      - counter-service
+    environment:
+      - VITE_AUTH_URL=http://auth-service:4000
+      - VITE_COUNTER_URL=http://counter-service:4001
+
+volumes:
+  mongo-data:
