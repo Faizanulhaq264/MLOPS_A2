@@ -13,7 +13,7 @@ services:
       context: ./auth-service
     environment:
       - MONGO_URL=mongodb://mongo:27017/app
-      - JWT_SECRET=supersecret123
+      - JWT_SECRET="2d4f0bfed08414a91794b3ee4bfc8ce68c176497983c7bad1298ae0fb8e43541"
     ports:
       - "4000:4000"
     depends_on:
@@ -24,7 +24,7 @@ services:
       context: ./counter-service
     environment:
       - MONGO_URL=mongodb://mongo:27017/app
-      - JWT_SECRET=supersecret123
+      - JWT_SECRET="2d4f0bfed08414a91794b3ee4bfc8ce68c176497983c7bad1298ae0fb8e43541"
     ports:
       - "4001:4001"
     depends_on:
