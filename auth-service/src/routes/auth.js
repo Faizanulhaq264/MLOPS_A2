@@ -41,10 +41,5 @@ router.post("/login", async (req, res) => {
   }
 });
 
-/* POST /forgot (simple stub) */
-router.post("/forgot", async (req, res) => {
-  /* You’d normally email a reset‑token here */
-  return res.json({ message: "Forgot‑password link would be emailed." });
-});
 
 export default router;

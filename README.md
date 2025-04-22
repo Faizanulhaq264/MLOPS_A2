@@ -7,7 +7,7 @@ and database persistence.
 | Layer | Technology | Purpose |
 |-------|------------|---------|
 | **Frontend** | React + Vite (build)<br>NGINX (runtime) | SPA with **login / signup** and a protected **counter** page. |
-| **Auth‑Service** | Node + Express + Mongoose | Manages users, hashes passwords (bcrypt), issues JWTs, handles `/signup`, `/login`, `/forgot`. |
+| **Auth‑Service** | Node + Express + Mongoose | Manages users, hashes passwords (bcrypt), issues JWTs, handles `/signup`, `/login` |
 | **Counter‑Service** | Node + Express + Mongoose | Stores one persistent counter per user in **MongoDB** (`counters` collection). |
 | **Database** | MongoDB 7 | Single‑pod deployment; exposed to the two Node services. |
 | **Ingress** | NGINX Ingress Controller | Routes external traffic by **Host** header: `frontend.local`, `auth-service.local`, `counter-service.local`. 
